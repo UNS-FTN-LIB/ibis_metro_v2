@@ -1,37 +1,28 @@
 from flask import Blueprint, jsonify, request
+from Simulator.Simulator import Simulator
 
 train = Blueprint('train', __name__)
 
-train_speed_data = {
-    'speed': 215
-}
-
-train_door_data = {
-    'door': 0
-}
-
-train_position_data = {
-    'position': 123
-}
+simulator = Simulator()
 
 
 @train.route('/speed', methods=['GET'])
 def get_speed():
-    return jsonify(train_speed_data)
+    return jsonify(simulator.train_speed)
 
 
 @train.route('/door', methods=['GET'])
 def get_door():
-    return jsonify(train_door_data)
+    return jsonify(simulator.train_door)
 
 
 @train.route('/door', methods=['PUT'])
 def update_door():
     new_door_value = request.json.get('door')
-    train_door_data['door'] = new_door_value
-    return jsonify(train_door_data)
+    simulator.train_door(new_door_value)
+    return jsonify(simulator.train_door)
 
 
 @train.route('/position', methods=['GET'])
 def get_position():
-    return jsonify(train_position_data)
+    return jsonify(simulator.train_position)
