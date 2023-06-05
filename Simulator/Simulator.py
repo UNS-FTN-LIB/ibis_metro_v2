@@ -4,9 +4,6 @@ import threading
 NUM_STATIONS = 15
 TIME_INTERVAL = 10
 
-MIN_SPEED = 0
-MAX_SPEED = 150
-
 SPEED_INTERVAL = 30
 POSITION_INTERVAL = 1
 
@@ -62,7 +59,7 @@ class Simulator:
         self._emergency = value
 
 
-    def simulate_train(self):
+    def simulate_train_forward(self):
         for station in range(1, NUM_STATIONS + 1):
             for time_interval in range(1, TIME_INTERVAL + 1):
                 time.sleep(time_interval)
@@ -75,10 +72,38 @@ class Simulator:
                 self._train_position = self._train_position + POSITION_INTERVAL
 
             self._train_door = 1
-            time.sleep(2)
+            time.sleep(5)
             self._train_door = 0
 
 
+    def simulate_train_backward(self):
+        self._train_direction = "B"
+        self._train_position = 150
+
+        for station in range(1, NUM_STATIONS + 1):
+            for time_interval in range(1, TIME_INTERVAL + 1):
+                time.sleep(time_interval)
+
+                if time_interval < 6:
+                    self._train_speed = self._train_speed + SPEED_INTERVAL
+                else:
+                    self._train_speed = self._train_speed - SPEED_INTERVAL
+
+                self._train_position = self._train_position - POSITION_INTERVAL
+
+            self._train_door = 1
+            time.sleep(5)
+            self._train_door = 0
+
+
+    def run_metro(self):
+        while(self._emergency is 0):
+            self.simulate_train_forward()
+            time.sleep(20)
+            self.simulate_train_backward()
+            time.sleep(20)
+
+
     def start_thread(self):
-        thread = threading.Thread(target=self.simulate_train)
+        thread = threading.Thread(target=self.run_metro)
         thread.start()
