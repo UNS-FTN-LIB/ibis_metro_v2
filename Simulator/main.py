@@ -11,6 +11,7 @@ app.register_blueprint(train, url_prefix='/train')
 app.register_blueprint(railway, url_prefix='/railway')
 app.register_blueprint(emergency, url_prefix='/emergency')
 app.register_blueprint(metro, url_prefix="/metro")
+
 if __name__ == '__main__':
     simulator = Simulator()
     simulator.start_thread()
