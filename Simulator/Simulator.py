@@ -17,6 +17,7 @@ class Simulator:
     _train_position = 0
     _railway_position = 0
     _emergency = 0
+    _train_direction = 'A'
 
 
     def __new__(cls, *args, **kwargs):
@@ -27,6 +28,10 @@ class Simulator:
     @property
     def train_speed(self):
         return self._train_speed
+
+    @property
+    def train_direction(self):
+        return self._train_direction
 
     @property
     def train_door(self):
