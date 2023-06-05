@@ -2,7 +2,7 @@ from flask import Flask
 from Api.Train import train
 from Api.Railway import railway
 from Api.Emergency import emergency
-from Simulator.Simulator import Simulator
+from Simulator import Simulator
 
 app = Flask(__name__)
 
