@@ -1,19 +1,17 @@
 from flask import Blueprint, jsonify, request
+from Simulator.Simulator import Simulator
 
 railway = Blueprint('railway', __name__)
 
-railway_position_data = {
-    'position': 215
-}
-
+simulator = Simulator()
 
 @railway.route('/position', methods=['GET'])
 def get_position():
-    return jsonify(railway_position_data)
+    return jsonify(simulator.railway_position)
 
 
 @railway.route('/position', methods=['PUT'])
 def update_position():
     new_position_value = request.json.get('door')
-    railway_position_data['door'] = new_position_value
-    return jsonify(railway_position_data)
+    simulator.railway_position(new_position_value)
+    return jsonify(simulator.railway_position)
