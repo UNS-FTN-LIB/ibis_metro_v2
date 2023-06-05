@@ -11,6 +11,11 @@ def get_speed():
     return jsonify(simulator.train_speed)
 
 
+@train.route('/direction', methods=['GET'])
+def get_direction():
+    return jsonify(simulator.train_direction)
+
+
 @train.route('/door', methods=['GET'])
 def get_door():
     return jsonify(simulator.train_door)
