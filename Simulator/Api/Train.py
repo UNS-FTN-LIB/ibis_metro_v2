@@ -1,5 +1,5 @@
 from flask import Blueprint, jsonify, request
-from Simulator.Simulator import Simulator
+from Simulator import Simulator
 
 train = Blueprint('train', __name__)
 
