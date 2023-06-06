@@ -5,7 +5,7 @@ import mqtt_client.mqtt_config as config
 import mqtt_client.states as states
 
 endpoint = 'http://localhost:5000'
-pull_url = endpoint + '/pull'
+pull_url = endpoint + '/metro/'
 
 def connect_mqtt():
     def on_connect(client, userdata, flags, rc):
@@ -52,32 +52,35 @@ def pull_data(client):
 
     while True:
         sleep(2)
-        response = requests.get(pull_url, '')
+        response = requests.get(pull_url)
         
-        #parse response
+        if response.status_code == 200:
+            data_json = response.json()
+            print(data_json)
+            #parse data_json
 
-        if states.train_A['direction'] != response['direction']:
-            states.train_A['direction'] = response['direction']
+            if states.train_A['direction'] != data_json['train_direction']:
+                states.train_A['direction'] = data_json['train_direction']
 
-        if states.train_A['position'] != response['position']:
-            states.train_A['position'] = response['position']
-            if states.train_A['direction'] == 'A':
-                _publish(client, config.topics['train_aa'], states.train_A['position'])
-            else:
-                _publish(client, config.topics['train_ab'], states.train_A['position'])
-        
-        if states.train_A['speed'] != response['speed']:
-            states.train_A['speed'] = response['speed']
-            _publish(client, config.topics['speed_a'], states.train_A['speed'])
+            if states.train_A['position'] != data_json['position']:
+                states.train_A['position'] = data_json['position']
+                if states.train_A['direction'] == 'A':
+                    _publish(client, config.topics['train_aa'], states.train_A['position'])
+                else:
+                    _publish(client, config.topics['train_ab'], states.train_A['position'])
+            
+            if states.train_A['speed'] != data_json['speed']:
+                states.train_A['speed'] = data_json['speed']
+                _publish(client, config.topics['speed_a'], states.train_A['speed'])
 
-        if states.train_A['doors'] != response['doors']:
-            states.train_A['doors'] = response['doors']
-            _publish(client, config.topics['doors_a'], states.train_A['doors'])
+            if states.train_A['doors'] != data_json['doors']:
+                states.train_A['doors'] = data_json['doors']
+                _publish(client, config.topics['doors_a'], states.train_A['doors'])
 
-        if states.train_A['passing_ab'] != response['passing_ab']:
-            states.train_A['passing_ab'] = response['passing_ab']
-            _publish(client, config.topics['passing_ab'], states.train_A['passing_ab'])
+            if states.metro_state['passing_ab'] != data_json['railway_position']:
+                states.metro_state['passing_ab'] = data_json['railway_position']
+                _publish(client, config.topics['passing_ab'], states.metro_state['passing_ab'])
 
-        if states.train_A['passing_ac'] != response['passing_ac']:
-            states.train_A['passing_ac'] = response['passing_ac']
-            _publish(client, config.topics['passing_ac'], states.train_A['passing_ac'])
+            if states.metro_state['passing_ac'] != data_json['railway_position']:
+                states.metro_state['passing_ac'] = data_json['railway_position']
+                _publish(client, config.topics['passing_ac'], states.metro_state['passing_ac'])
