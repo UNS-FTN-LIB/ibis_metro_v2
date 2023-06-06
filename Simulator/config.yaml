@@ -1,0 +1,3 @@
+door_open_time: 15
+direction_change_time: 40
+train_position_change_time: 5
