@@ -1,5 +1,7 @@
 import time
 import threading
+import yaml
+import os
 
 NUM_STATIONS = 15
 TIME_INTERVAL = 10
@@ -15,6 +17,10 @@ class Simulator:
     _railway_position = 0
     _emergency = 0
     _train_direction = 'A'
+
+    _door_open_time = 0
+    _direction_change_time = 0
+    _train_position_change_time = 0
 
 
     def __new__(cls, *args, **kwargs):
@@ -59,51 +65,46 @@ class Simulator:
         self._emergency = value
 
 
-    def simulate_train_forward(self):
-        for station in range(1, NUM_STATIONS + 1):
-            for time_interval in range(1, TIME_INTERVAL + 1):
-                time.sleep(time_interval)
+    def load_config_data(self):
+        current_dir = os.getcwd()
+        absolute_path = 'Simulator/config.yaml'
+        relative_path = os.path.join(current_dir, absolute_path)
 
-                if time_interval < 6:
-                    self._train_speed = self._train_speed + SPEED_INTERVAL
-                else:
-                    self._train_speed = self._train_speed - SPEED_INTERVAL
+        with open(relative_path, 'r') as file:
+            config_data = yaml.safe_load(file)
 
-                self._train_position = self._train_position + POSITION_INTERVAL
-
-            self._train_door = 1
-            time.sleep(5)
-            self._train_door = 0
+        self._door_open_time = config_data['door_open_time']
+        self._direction_change_time = config_data['direction_change_time']
+        self._train_position_change_time = config_data['train_position_change_time']
 
 
-    def simulate_train_backward(self):
-        self._train_direction = "B"
-        self._train_position = 150
+    def simulate_train(self):
+        for direction in ("A", "B"):
+            self._train_direction = direction
+            for station in range(1, NUM_STATIONS + 1):
+                for time_interval in range(1, TIME_INTERVAL + 1):
+                    time.sleep(self._train_position_change_time)
 
-        for station in range(1, NUM_STATIONS + 1):
-            for time_interval in range(1, TIME_INTERVAL + 1):
-                time.sleep(time_interval)
+                    if time_interval < 6:
+                        self._train_speed = self._train_speed + SPEED_INTERVAL
+                    else:
+                        self._train_speed = self._train_speed - SPEED_INTERVAL
 
-                if time_interval < 6:
-                    self._train_speed = self._train_speed + SPEED_INTERVAL
-                else:
-                    self._train_speed = self._train_speed - SPEED_INTERVAL
+                    self._train_position = self._train_position + POSITION_INTERVAL
 
-                self._train_position = self._train_position - POSITION_INTERVAL
-
-            self._train_door = 1
-            time.sleep(5)
-            self._train_door = 0
+                self._train_door = 1
+                time.sleep(self._door_open_time)
+                self._train_door = 0
+            self._train_position = 0
+            time.sleep(self._direction_change_time)
 
 
     def run_metro(self):
-        while(self._emergency is 0):
-            self.simulate_train_forward()
-            time.sleep(20)
-            self.simulate_train_backward()
-            time.sleep(20)
+        while(self._emergency == 0):
+            self.simulate_train()
 
 
     def start_thread(self):
+        self.load_config_data()
         thread = threading.Thread(target=self.run_metro)
         thread.start()
