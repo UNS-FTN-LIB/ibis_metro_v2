@@ -3,7 +3,13 @@ import threading
 import yaml
 import os
 
-NUM_STATIONS = 15
+from Model.Train import Train
+from Model.Railway import Railway
+
+NUM_A_STATIONS = 15
+NUM_B_STATIONS = 9
+NUM_C_STATIONS = 11
+
 TIME_INTERVAL = 10
 
 SPEED_INTERVAL = 30
@@ -11,16 +17,20 @@ POSITION_INTERVAL = 1
 
 class Simulator:
     _instance = None
-    _train_speed = 0
-    _train_door = 0
-    _train_position = 0
-    _railway_position = 0
     _emergency = 0
-    _train_direction = 'A'
+
+    _train_a = Train()
+    _train_b = Train()
+    _train_c = Train()
+
+    _railway_ab = Railway()
+    _railway_ac = Railway()
+    _railway_bc = Railway()
 
     _door_open_time = 0
     _direction_change_time = 0
     _train_position_change_time = 0
+    _train_start_time = 0
 
 
     def __new__(cls, *args, **kwargs):
@@ -29,32 +39,40 @@ class Simulator:
         return cls._instance
 
     @property
-    def train_speed(self):
-        return self._train_speed
+    def train_a(self):
+        return self._train_a
 
     @property
-    def train_direction(self):
-        return self._train_direction
+    def train_b(self):
+        return self._train_b
 
     @property
-    def train_door(self):
-        return self._train_door
-
-    @train_door.setter
-    def train_door(self, value):
-        self._train_door = value
+    def train_c(self):
+        return self._train_c
 
     @property
-    def train_position(self):
-        return self._train_position
+    def railway_ab(self):
+        return self._railway_ab
+
+    @railway_ab.setter
+    def railway_ab(self, value):
+        self._railway_ab = value
 
     @property
-    def railway_position(self):
-        return self._railway_position
+    def railway_ac(self):
+        return self._railway_ac
 
-    @railway_position.setter
-    def railway_position(self, value):
-        self._railway_position = value
+    @railway_ac.setter
+    def railway_ac_position(self, value):
+        self._railway_ac = value
+
+    @property
+    def railway_bc(self):
+        return self._railway_bc
+
+    @railway_bc.setter
+    def railway_bc(self, value):
+        self._railway_bc = value
 
     @property
     def emergency(self):
@@ -76,35 +94,42 @@ class Simulator:
         self._door_open_time = config_data['door_open_time']
         self._direction_change_time = config_data['direction_change_time']
         self._train_position_change_time = config_data['train_position_change_time']
+        self._train_start_time = config_data['train_start_time']
 
 
-    def simulate_train(self):
+    def simulate_train(self, train:Train, number_of_stations):
         for direction in ("A", "B"):
             self._train_direction = direction
-            for station in range(1, NUM_STATIONS + 1):
+            for station in range(1, number_of_stations + 1):
                 for time_interval in range(1, TIME_INTERVAL + 1):
                     time.sleep(self._train_position_change_time)
 
                     if time_interval < 6:
-                        self._train_speed = self._train_speed + SPEED_INTERVAL
+                        train.train_speed = train.train_speed + SPEED_INTERVAL
                     else:
-                        self._train_speed = self._train_speed - SPEED_INTERVAL
+                        train.train_speed = train.train_speed - SPEED_INTERVAL
 
-                    self._train_position = self._train_position + POSITION_INTERVAL
+                    train.train_position = train.train_position + POSITION_INTERVAL
 
-                self._train_door = 1
+                train.train_door = 1
                 time.sleep(self._door_open_time)
-                self._train_door = 0
-            self._train_position = 0
+                train.train_door = 0
+
+            train.train_position = 0
             time.sleep(self._direction_change_time)
 
 
-    def run_metro(self):
+    def run_metro(self, train, stations):
         while(self._emergency == 0):
-            self.simulate_train()
+            self.simulate_train(train, stations)
 
 
     def start_thread(self):
         self.load_config_data()
-        thread = threading.Thread(target=self.run_metro)
-        thread.start()
+        thread_a = threading.Thread(target=self.run_metro, args=(self._train_a, NUM_A_STATIONS))
+        thread_b = threading.Thread(target=self.run_metro, args=(self._train_b, NUM_B_STATIONS))
+        thread_c = threading.Thread(target=self.run_metro, args=(self._train_c, NUM_C_STATIONS))
+
+        thread_a.start()
+        thread_b.start()
+        thread_c.start()
