@@ -5,7 +5,7 @@ import mqtt_client.mqtt_config as config
 import mqtt_client.states as states
 
 endpoint = 'http://localhost:5000'
-pull_url = endpoint + '/metro'
+pull_url = endpoint + '/metro/'
 
 def connect_mqtt():
     def on_connect(client, userdata, flags, rc):
@@ -52,7 +52,7 @@ def pull_data(client):
 
     while True:
         sleep(2)
-        response = requests.get(pull_url, '')
+        response = requests.get(pull_url)
         
         if response.status_code == 200:
             data_json = response.json()

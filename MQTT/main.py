@@ -14,4 +14,4 @@ def start_loop():
 if __name__ == '__main__':
     update_proces = Process(target=start_loop, args=())
     update_proces.start()
-    app.run(debug=True, port=5001)
+    app.run(debug=False, port=5001)
