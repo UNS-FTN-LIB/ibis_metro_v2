@@ -24,27 +24,18 @@ def trainC_state_update_process():
     mqtt_pub_sub.pull_trainC_data(client)
 
 def start_processes():
-    processes = []
-
     metro_update_proces = Process(target=metro_state_update_process, args=())
     metro_update_proces.start()
-    processes.append(metro_update_proces)
 
     trainA_update_proces = Process(target=trainA_state_update_process, args=())
     trainA_update_proces.start()
-    processes.append(trainA_update_proces)
 
     trainB_update_proces = Process(target=trainB_state_update_process, args=())
     trainB_update_proces.start()
-    processes.append(trainB_update_proces)
 
     trainC_update_proces = Process(target=trainC_state_update_process, args=())
     trainC_update_proces.start()
-    processes.append(trainC_update_proces)
 
-    for p in processes:
-        p.join()
-    
 
 if __name__ == '__main__':
     start_processes()
