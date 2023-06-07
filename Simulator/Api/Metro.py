@@ -45,3 +45,9 @@ def get_c_train_data():
         "doors" : simulator.train_c.train_door
     }
     return jsonify(metro_status)
+
+
+@metro.route('/start', methods=['GET'])
+def start_metro():
+    simulator.start_thread()
+    return jsonify("", 200)
