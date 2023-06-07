@@ -60,7 +60,6 @@ def pull_metro_data(client):
         if response.status_code == 200:
             data_json = response.json()
             print(data_json)
-            #parse data_json
 
             if states.metro_state['passing_ab'] != data_json['railway_ab_position']:
                 states.metro_state['passing_ab'] = data_json['railway_ab_position']
@@ -84,7 +83,6 @@ def pull_trainA_data(client):
         if response.status_code == 200:
             data_json = response.json()
             print(data_json)
-            #parse data_json
 
             if states.train_A['direction'] != data_json['train_direction']:
                 states.train_A['direction'] = data_json['train_direction']
@@ -113,7 +111,6 @@ def pull_trainB_data(client):
         if response.status_code == 200:
             data_json = response.json()
             print(data_json)
-            #parse data_json
 
             if states.train_B['direction'] != data_json['train_direction']:
                 states.train_B['direction'] = data_json['train_direction']
@@ -142,7 +139,6 @@ def pull_trainC_data(client):
         if response.status_code == 200:
             data_json = response.json()
             print(data_json)
-            #parse data_json
 
             if states.train_C['direction'] != data_json['train_direction']:
                 states.train_C['direction'] = data_json['train_direction']
