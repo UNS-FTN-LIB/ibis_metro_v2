@@ -10,14 +10,14 @@ pull_trainA_data_url = endpoint + '/metro/train-a'
 pull_trainB_data_url = endpoint + '/metro/train-b'
 pull_trainC_data_url = endpoint + '/metro/train-c'
 
-def connect_mqtt():
+def connect_mqtt(client_id):
     def on_connect(client, userdata, flags, rc):
         if rc == 0:
             print("Connected to MQTT Broker!")
         else:
             print("Failed to connect, return code %d\n", rc)
 
-    client = mqtt_client.Client(config.client_id)
+    client = mqtt_client.Client(client_id)
     client.on_connect = on_connect
     client.connect(config.broker, config.port)
     return client
@@ -31,8 +31,8 @@ def _publish(client, topic, message):
         print(f"Successfully sent message {message}")
 
 
-def create_connection():
-    client = connect_mqtt()
+def create_connection(client_id):
+    client = connect_mqtt(client_id)
     client.loop_start()
     return client
 
@@ -54,7 +54,7 @@ def get_message(topic):
 def pull_metro_data(client):
 
     while True:
-        sleep(1)
+        sleep(2)
         response = requests.get(pull_metro_data_url)
         
         if response.status_code == 200:
@@ -75,10 +75,10 @@ def pull_metro_data(client):
                 _publish(client, config.topics['passing_ac'], states.metro_state['passing_ac'])
 
 
-#def pull_trainA_data(client):
+def pull_trainA_data(client):
 
-    #while True:
-        #sleep(2)
+    while True:
+        sleep(2)
         response = requests.get(pull_trainA_data_url)
         
         if response.status_code == 200:
@@ -104,10 +104,10 @@ def pull_metro_data(client):
                 states.train_A['doors'] = data_json['doors']
                 _publish(client, config.topics['doors_a'], states.train_A['doors'])
 
-#def pull_trainB_data(client):
+def pull_trainB_data(client):
 
-    #while True:
-        #sleep(2)
+    while True:
+        sleep(2)
         response = requests.get(pull_trainB_data_url)
         
         if response.status_code == 200:
@@ -133,10 +133,10 @@ def pull_metro_data(client):
                 states.train_B['doors'] = data_json['doors']
                 _publish(client, config.topics['doors_b'], states.train_B['doors'])
 
-#def pull_trainC_data(client):
+def pull_trainC_data(client):
 
-    #while True:
-        #sleep(2)
+    while True:
+        sleep(2)
         response = requests.get(pull_trainC_data_url)
         
         if response.status_code == 200:
