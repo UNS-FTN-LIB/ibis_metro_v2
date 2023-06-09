@@ -109,13 +109,16 @@ class Simulator:
                     else:
                         train.train_speed = train.train_speed - SPEED_INTERVAL
 
-                    train.train_position = train.train_position + POSITION_INTERVAL
+                    if direction == "A":
+                        train.train_position = train.train_position + POSITION_INTERVAL
+                    elif direction == "B":
+                        train.train_position = train.train_position - POSITION_INTERVAL
 
                 train.train_door = 1
                 time.sleep(self._door_open_time)
                 train.train_door = 0
 
-            train.train_position = 0
+            #train.train_position = 0
             time.sleep(self._direction_change_time)
 
 
