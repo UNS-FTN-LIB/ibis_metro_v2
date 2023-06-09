@@ -12,8 +12,9 @@ def get_position_ab():
 
 @railway.route('/position/ab', methods=['PUT'])
 def update_position_ab():
-    new_position_value = request.json.get('door')
-    simulator.railway_ab.position(new_position_value)
+    print(request)
+    new_position_value = request.json.get('position')
+    simulator.railway_ab.position = new_position_value
     return jsonify(simulator.railway_ab.position)
 
 
@@ -24,8 +25,8 @@ def get_position_ac():
 
 @railway.route('/position/ac', methods=['PUT'])
 def update_position_ac():
-    new_position_value = request.json.get('door')
-    simulator.railway_ac.position(new_position_value)
+    new_position_value = request.json.get('position')
+    simulator.railway_ac.position = new_position_value
     return jsonify(simulator.railway_ac.position)
 
 
@@ -36,6 +37,6 @@ def get_position_bc():
 
 @railway.route('/position/bc', methods=['PUT'])
 def update_position_bc():
-    new_position_value = request.json.get('door')
-    simulator.railway_bc.position(new_position_value)
+    new_position_value = request.json.get('position')
+    simulator.railway_bc.position = new_position_value
     return jsonify(simulator.railway_bc.position)
