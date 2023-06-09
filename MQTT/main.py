@@ -36,6 +36,18 @@ def start_processes():
     trainC_update_proces = Process(target=trainC_state_update_process, args=())
     trainC_update_proces.start()
 
+    passing_ab = Process(target=mqtt_pub_sub.get_message(mqtt_pub_sub.config.topics['passing_ab']), args=())
+    passing_ab.start()
+
+    passing_ac = Process(target=mqtt_pub_sub.get_message(mqtt_pub_sub.config.topics['passing_ac']), args=())
+    passing_ac.start()
+
+    passing_bc = Process(target=mqtt_pub_sub.get_message(mqtt_pub_sub.config.topics['passing_bc']), args=())
+    passing_bc.start()
+
+    start_simulation = Process(target=mqtt_pub_sub.get_message(mqtt_pub_sub.config.topics['start']), args=())
+    start_simulation.start()
+
 
 if __name__ == '__main__':
     start_processes()

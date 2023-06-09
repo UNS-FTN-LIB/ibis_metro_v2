@@ -19,7 +19,8 @@ topics = {
     "passing_ac": "PassingAC",
     "passing_bc": "PassingBC",
 
-    "emergency": "Emergency"
+    "emergency": "Emergency",
+    "start": "MetroStartButton"
 }
 
 broker = 'broker.hivemq.com'

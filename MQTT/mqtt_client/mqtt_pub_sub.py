@@ -9,6 +9,8 @@ pull_metro_data_url = endpoint + '/metro/'
 pull_trainA_data_url = endpoint + '/metro/train-a'
 pull_trainB_data_url = endpoint + '/metro/train-b'
 pull_trainC_data_url = endpoint + '/metro/train-c'
+position_url = endpoint + '/railway/position/'
+metro_start_url = endpoint + '/metro/start'
 
 def connect_mqtt(client_id):
     def on_connect(client, userdata, flags, rc):
@@ -40,15 +42,25 @@ def create_connection(client_id):
 def _subscribe(client, topic):
     def on_message(client, userdata, msg):
         print(f"Received `{msg.payload.decode()}` from `{msg.topic}` topic")
+        # notify simulator
+        while True:
+            if msg.topic[0:7] == 'Passing':
+               response = requests.put(position_url + msg.topic[7:].lower().strip(), json={'position': msg.payload.decode()})
+            else:
+                response = requests.get(metro_start_url)
+            
+            if response.status_code == 200:
+                break
 
     client.subscribe(topic)
     client.on_message = on_message
 
 
 def get_message(topic):
-    client = connect_mqtt()
+    print(topic)
+    client = connect_mqtt(topic)
     _subscribe(client, topic)
-    client.loop_forever()
+    client.loop_start()
 
 
 def pull_metro_data(client):
