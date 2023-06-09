@@ -148,12 +148,12 @@ class Simulator:
                 if train.train_position == B_TRAIN_AB_CHANGE_A_DIRECTION:
                     self.railway_ab.position = 1
                 elif train.train_position == B_TRAIN_BC_CHANGE_A_DIRECTION:
-                    self.railway_ac.position = 0
+                    self.railway_bc.position = 0
             elif train_type == 'C':
                 if train.train_position == C_TRAIN_AC_CHANGE_A_DIRECTION:
-                    self.railway_ab.position = 1
-                elif train.train_position == C_TRAIN_BC_CHANGE_A_DIRECTION:
                     self.railway_ac.position = 1
+                elif train.train_position == C_TRAIN_BC_CHANGE_A_DIRECTION:
+                    self.railway_bc.position = 1
         elif train_direction == 'B':
             if train_type == 'A':
                 if train.train_position == A_TRAIN_AB_CHANGE_B_DIRECTION:
@@ -164,12 +164,12 @@ class Simulator:
                 if train.train_position == B_TRAIN_AB_CHANGE_B_DIRECTION:
                     self.railway_ab.position = 1
                 elif train.train_position == B_TRAIN_BC_CHANGE_B_DIRECTION:
-                    self.railway_ac.position = 0
+                    self.railway_bc.position = 0
             elif train_type == 'C':
                 if train.train_position == C_TRAIN_AC_CHANGE_B_DIRECTION:
-                    self.railway_ab.position = 1
-                elif train.train_position == C_TRAIN_BC_CHANGE_B_DIRECTION:
                     self.railway_ac.position = 1
+                elif train.train_position == C_TRAIN_BC_CHANGE_B_DIRECTION:
+                    self.railway_bc.position = 1
 
 
     def run_metro(self, train, stations, train_type):
