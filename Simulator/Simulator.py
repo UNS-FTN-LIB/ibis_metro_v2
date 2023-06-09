@@ -10,6 +10,19 @@ NUM_A_STATIONS = 15
 NUM_B_STATIONS = 9
 NUM_C_STATIONS = 11
 
+A_TRAIN_AB_CHANGE_A_DIRECTION = 75
+A_TRAIN_AB_CHANGE_B_DIRECTION = 85
+B_TRAIN_AB_CHANGE_A_DIRECTION = 15
+B_TRAIN_AB_CHANGE_B_DIRECTION = 25
+A_TRAIN_AC_CHANGE_A_DIRECTION = 95
+A_TRAIN_AC_CHANGE_B_DIRECTION = 105
+C_TRAIN_AC_CHANGE_A_DIRECTION = 35
+C_TRAIN_AC_CHANGE_B_DIRECTION = 45
+B_TRAIN_BC_CHANGE_A_DIRECTION = 35
+B_TRAIN_BC_CHANGE_B_DIRECTION = 45
+C_TRAIN_BC_CHANGE_A_DIRECTION = 45
+C_TRAIN_BC_CHANGE_B_DIRECTION = 55
+
 TIME_INTERVAL = 10
 
 SPEED_INTERVAL = 30
@@ -97,7 +110,7 @@ class Simulator:
         self._train_start_time = config_data['train_start_time']
 
 
-    def simulate_train(self, train:Train, number_of_stations):
+    def simulate_train(self, train:Train, number_of_stations, train_type):
         for direction in ("A", "B"):
             self._train_direction = direction
             for station in range(1, number_of_stations + 1):
@@ -114,6 +127,8 @@ class Simulator:
                     elif direction == "B":
                         train.train_position = train.train_position - POSITION_INTERVAL
 
+                    self.update_railway_position(direction, train_type, train)
+
                 train.train_door = 1
                 time.sleep(self._door_open_time)
                 train.train_door = 0
@@ -122,16 +137,51 @@ class Simulator:
             time.sleep(self._direction_change_time)
 
 
-    def run_metro(self, train, stations):
+    def update_railway_position(self, train_direction, train_type, train : Train):
+        if train_direction == 'A':
+            if train_type == 'A':
+                if train.train_position == A_TRAIN_AB_CHANGE_A_DIRECTION:
+                    self.railway_ab.position = 0
+                elif train.train_position == A_TRAIN_AC_CHANGE_A_DIRECTION:
+                    self.railway_ac.position = 0
+            elif train_type == 'B':
+                if train.train_position == B_TRAIN_AB_CHANGE_A_DIRECTION:
+                    self.railway_ab.position = 1
+                elif train.train_position == B_TRAIN_BC_CHANGE_A_DIRECTION:
+                    self.railway_ac.position = 0
+            elif train_type == 'C':
+                if train.train_position == C_TRAIN_AC_CHANGE_A_DIRECTION:
+                    self.railway_ab.position = 1
+                elif train.train_position == C_TRAIN_BC_CHANGE_A_DIRECTION:
+                    self.railway_ac.position = 1
+        elif train_direction == 'B':
+            if train_type == 'A':
+                if train.train_position == A_TRAIN_AB_CHANGE_B_DIRECTION:
+                    self.railway_ab.position = 0
+                elif train.train_position == A_TRAIN_AC_CHANGE_B_DIRECTION:
+                    self.railway_ac.position = 0
+            elif train_type == 'B':
+                if train.train_position == B_TRAIN_AB_CHANGE_B_DIRECTION:
+                    self.railway_ab.position = 1
+                elif train.train_position == B_TRAIN_BC_CHANGE_B_DIRECTION:
+                    self.railway_ac.position = 0
+            elif train_type == 'C':
+                if train.train_position == C_TRAIN_AC_CHANGE_B_DIRECTION:
+                    self.railway_ab.position = 1
+                elif train.train_position == C_TRAIN_BC_CHANGE_B_DIRECTION:
+                    self.railway_ac.position = 1
+
+
+    def run_metro(self, train, stations, train_type):
         while(self._emergency == 0):
-            self.simulate_train(train, stations)
+            self.simulate_train(train, stations, train_type)
 
 
     def start_thread(self):
         self.load_config_data()
-        thread_a = threading.Thread(target=self.run_metro, args=(self._train_a, NUM_A_STATIONS))
-        thread_b = threading.Thread(target=self.run_metro, args=(self._train_b, NUM_B_STATIONS))
-        thread_c = threading.Thread(target=self.run_metro, args=(self._train_c, NUM_C_STATIONS))
+        thread_a = threading.Thread(target=self.run_metro, args=(self._train_a, NUM_A_STATIONS, 'A'))
+        thread_b = threading.Thread(target=self.run_metro, args=(self._train_b, NUM_B_STATIONS, 'B'))
+        thread_c = threading.Thread(target=self.run_metro, args=(self._train_c, NUM_C_STATIONS, 'C'))
 
         thread_a.start()
         thread_b.start()
