@@ -100,7 +100,7 @@ class Simulator:
 
     def load_config_data(self):
         current_dir = os.getcwd()
-        absolute_path = 'Simulator/config.yaml'
+        absolute_path = 'config.yaml'
         relative_path = os.path.join(current_dir, absolute_path)
 
         with open(relative_path, 'r') as file:

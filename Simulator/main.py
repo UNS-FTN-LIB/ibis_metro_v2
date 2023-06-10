@@ -14,4 +14,4 @@ app.register_blueprint(metro, url_prefix="/metro")
 
 if __name__ == '__main__':
     simulator = Simulator()
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=5000)

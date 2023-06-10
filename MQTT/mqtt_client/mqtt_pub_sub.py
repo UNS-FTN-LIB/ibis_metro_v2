@@ -45,10 +45,10 @@ def _subscribe(client, topic):
         # notify simulator
         while True:
             if msg.topic[0:7] == 'Passing':
-               response = requests.put(position_url + msg.topic[7:].lower().strip(), json={'position': msg.payload.decode()})
+                response = requests.put(position_url + msg.topic[7:].lower().strip(), json={'position': msg.payload.decode()})
             else:
                 response = requests.get(metro_start_url)
-            
+
             if response.status_code == 200:
                 break
 
@@ -68,7 +68,7 @@ def pull_metro_data(client):
     while True:
         sleep(2)
         response = requests.get(pull_metro_data_url)
-        
+
         if response.status_code == 200:
             data_json = response.json()
             print(data_json)
@@ -91,7 +91,7 @@ def pull_trainA_data(client):
     while True:
         sleep(2)
         response = requests.get(pull_trainA_data_url)
-        
+
         if response.status_code == 200:
             data_json = response.json()
             print(data_json)
@@ -105,7 +105,7 @@ def pull_trainA_data(client):
                     _publish(client, config.topics['train_aa'], states.train_A['position'])
                 else:
                     _publish(client, config.topics['train_ab'], states.train_A['position'])
-            
+
             if states.train_A['speed'] != data_json['speed']:
                 states.train_A['speed'] = data_json['speed']
                 _publish(client, config.topics['speed_a'], states.train_A['speed'])
