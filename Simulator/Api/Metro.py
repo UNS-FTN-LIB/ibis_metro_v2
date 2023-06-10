@@ -47,7 +47,17 @@ def get_c_train_data():
     return jsonify(metro_status)
 
 
-@metro.route('/start', methods=['GET'])
+@metro.route('/start', methods=['POST'])
 def start_metro():
-    simulator.start_thread()
-    return jsonify("", 200)
+    data = request.json.get('button')
+    if data == '0':
+        data = False
+    elif data == '1':
+        data = True
+
+    simulator.start_thread(data)
+
+    if data:
+        return jsonify("Metro is stopped", 200)
+    elif not data:
+        return jsonify("Metro is started", 200)

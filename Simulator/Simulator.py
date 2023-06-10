@@ -45,6 +45,8 @@ class Simulator:
     _train_position_change_time = 0
     _train_start_time = 0
 
+    is_started = False
+
 
     def __new__(cls, *args, **kwargs):
         if not cls._instance:
@@ -115,6 +117,9 @@ class Simulator:
             self._train_direction = direction
             for station in range(1, number_of_stations + 1):
                 for time_interval in range(1, TIME_INTERVAL + 1):
+
+                    self.event.wait()
+
                     time.sleep(self._train_position_change_time)
 
                     if time_interval < 6:
@@ -177,12 +182,22 @@ class Simulator:
             self.simulate_train(train, stations, train_type)
 
 
-    def start_thread(self):
-        self.load_config_data()
-        thread_a = threading.Thread(target=self.run_metro, args=(self._train_a, NUM_A_STATIONS, 'A'))
-        thread_b = threading.Thread(target=self.run_metro, args=(self._train_b, NUM_B_STATIONS, 'B'))
-        thread_c = threading.Thread(target=self.run_metro, args=(self._train_c, NUM_C_STATIONS, 'C'))
+    def start_thread(self, button_status):
+        if not button_status and self.is_started:
+            self.event.set()
+        elif button_status and self.is_started:
+            self.event.clear()
+        elif not self.is_started:
+            self.is_started = True
 
-        thread_a.start()
-        thread_b.start()
-        thread_c.start()
+            self.event = threading.Event()
+            self.event.set()
+
+            self.load_config_data()
+            thread_a = threading.Thread(target=self.run_metro, args=(self._train_a, NUM_A_STATIONS, 'A'))
+            thread_b = threading.Thread(target=self.run_metro, args=(self._train_b, NUM_B_STATIONS, 'B'))
+            thread_c = threading.Thread(target=self.run_metro, args=(self._train_c, NUM_C_STATIONS, 'C'))
+
+            thread_a.start()
+            thread_b.start()
+            thread_c.start()
