@@ -13,5 +13,5 @@ def get_position():
 @emergency.route('/', methods=['PUT'])
 def update_position():
     new_emergency_value = request.json.get('emergency')
-    simulator.emergency(new_emergency_value)
+    simulator.emergency = new_emergency_value
     return jsonify(simulator.emergency)

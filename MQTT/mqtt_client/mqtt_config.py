@@ -1,17 +1,14 @@
 # TODO add fill list with updated topics for INview
 topics = {
     "train_aa": "TrainAA",
-    "train_ab": "TrainAB",
     "speed_a": "SpeedA",
     "doors_a": "DoorsA",
 
     "train_ba": "TrainBA",
-    "train_bb": "TrainBB",
     "speed_b": "SpeedB",
     "doors_b": "DoorsB",
 
     "train_ca": "TrainCA",
-    "train_cb": "TrainCB",
     "speed_c": "SpeedC",
     "doors_c": "DoorsC",
 
@@ -19,7 +16,8 @@ topics = {
     "passing_ac": "PassingAC",
     "passing_bc": "PassingBC",
 
-    "emergency": "Emergency",
+    "emergency": "EmergencyStopMetro",
+    "emergency_view": "EmergencyMetroView",
     "start": "MetroStartButton"
 }
 

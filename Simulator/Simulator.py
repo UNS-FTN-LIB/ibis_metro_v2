@@ -28,6 +28,10 @@ TIME_INTERVAL = 10
 SPEED_INTERVAL = 30
 POSITION_INTERVAL = 1
 
+STOPED = False
+POSITIONS_LEFT = 0
+STOPED_POSITION = 0
+
 class Simulator:
     _instance = None
     _emergency = 0
@@ -116,16 +120,39 @@ class Simulator:
         for direction in ("A", "B"):
             self._train_direction = direction
             for station in range(1, number_of_stations + 1):
+                STOPED = False
+                POSITIONS_LEFT = 0
+                STOPED_POSITION = 0
+                train.train_speed = 0
                 for time_interval in range(1, TIME_INTERVAL + 1):
 
-                    self.event.wait()
-
+                    if self.event.is_set() == False:
+                        train.train_speed = 0
+                        self.event.wait()
+                        STOPED = True
+                        STOPED_POSITION = time_interval - 1
+                        POSITIONS_LEFT = 10 - STOPED_POSITION
+                        
                     time.sleep(self._train_position_change_time)
 
-                    if time_interval < 6:
-                        train.train_speed = train.train_speed + SPEED_INTERVAL
+                    if STOPED == False:
+                        if time_interval < 6:
+                            train.train_speed = train.train_speed + SPEED_INTERVAL
+                        else:
+                            train.train_speed = train.train_speed - SPEED_INTERVAL
                     else:
-                        train.train_speed = train.train_speed - SPEED_INTERVAL
+                        if POSITIONS_LEFT % 2 == 1:
+                            if time_interval < round(POSITIONS_LEFT / 2) + STOPED_POSITION:
+                                train.train_speed = train.train_speed + SPEED_INTERVAL
+                            elif time_interval == round(POSITIONS_LEFT / 2) + STOPED_POSITION:
+                                train.train_speed = train.train_speed
+                            else:
+                                train.train_speed = train.train_speed - SPEED_INTERVAL
+                        else:
+                            if time_interval <= round(POSITIONS_LEFT / 2) + STOPED_POSITION:
+                                train.train_speed = train.train_speed + SPEED_INTERVAL
+                            else:
+                                train.train_speed = train.train_speed - SPEED_INTERVAL
 
                     if direction == "A":
                         train.train_position = train.train_position + POSITION_INTERVAL
@@ -184,9 +211,9 @@ class Simulator:
 
     def start_thread(self, button_status):
         if not button_status and self.is_started:
-            self.event.set()
-        elif button_status and self.is_started:
             self.event.clear()
+        elif button_status and self.is_started:
+            self.event.set()
         elif not self.is_started:
             self.is_started = True
 

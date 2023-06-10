@@ -11,6 +11,7 @@ pull_trainB_data_url = endpoint + '/metro/train-b'
 pull_trainC_data_url = endpoint + '/metro/train-c'
 position_url = endpoint + '/railway/position/'
 metro_start_url = endpoint + '/metro/start'
+emergency_url = endpoint + '/emergency/'
 
 def connect_mqtt(client_id):
     def on_connect(client, userdata, flags, rc):
@@ -38,6 +39,28 @@ def create_connection(client_id):
     client.loop_start()
     return client
 
+def set_initial_passings():
+    client = connect_mqtt('initial_values')
+    client.loop_start()
+    _publish(client, config.topics['passing_ab'], 0)
+    _publish(client, config.topics['passing_ac'], 0)
+    _publish(client, config.topics['passing_bc'], 0)
+    _publish(client, config.topics['start'], 0)
+    _publish(client, config.topics['emergency_view'], 0)
+    client.loop_stop()
+
+def reset_start_button():
+    client = connect_mqtt('start_button_reset')
+    client.loop_start()
+    _publish(client, config.topics['start'], 0)
+    client.loop_stop()
+
+def reset_emergency_button():
+    client = connect_mqtt('emergency_button_reset')
+    client.loop_start()
+    _publish(client, config.topics['emergency_view'], 0)
+    client.loop_stop()
+
 
 def _subscribe(client, topic):
     def on_message(client, userdata, msg):
@@ -45,9 +68,18 @@ def _subscribe(client, topic):
         # notify simulator
         while True:
             if msg.topic[0:7] == 'Passing':
-               response = requests.put(position_url + msg.topic[7:].lower().strip(), json={'position': msg.payload.decode()})
+                passing = msg.topic[7:].lower().strip()
+                response = requests.put(position_url + passing, json={'position': msg.payload.decode()})
+                states.metro_state['passing_' + passing] = msg.payload.decode()
+            elif msg.topic == 'EmergencyStopMetro':
+                #response = requests.put(emergency_url, json={'emergency': 1})
+                response = requests.post(metro_start_url, json={'button': 1})
+                reset_start_button()
+            elif msg.topic == 'MetroStartButton' and client._client_id == b'MetroStartButton':
+                response = requests.post(metro_start_url, json={'button': msg.payload.decode()})
+                reset_emergency_button()
             else:
-                response = requests.get(metro_start_url)
+                break
             
             if response.status_code == 200:
                 break
@@ -57,7 +89,6 @@ def _subscribe(client, topic):
 
 
 def get_message(topic):
-    print(topic)
     client = connect_mqtt(topic)
     _subscribe(client, topic)
     client.loop_start()
@@ -83,7 +114,7 @@ def pull_metro_data(client):
 
             if states.metro_state['passing_bc'] != data_json['railway_bc_position']:
                 states.metro_state['passing_bc'] = data_json['railway_bc_position']
-                _publish(client, config.topics['passing_ac'], states.metro_state['passing_ac'])
+                _publish(client, config.topics['passing_bc'], states.metro_state['passing_bc'])
 
 
 def pull_trainA_data(client):

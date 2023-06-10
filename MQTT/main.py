@@ -24,6 +24,7 @@ def trainC_state_update_process():
     mqtt_pub_sub.pull_trainC_data(client)
 
 def start_processes():
+    mqtt_pub_sub.set_initial_passings()
     metro_update_proces = Process(target=metro_state_update_process, args=())
     metro_update_proces.start()
 
@@ -47,6 +48,9 @@ def start_processes():
 
     start_simulation = Process(target=mqtt_pub_sub.get_message(mqtt_pub_sub.config.topics['start']), args=())
     start_simulation.start()
+
+    emergency_process = Process(target=mqtt_pub_sub.get_message(mqtt_pub_sub.config.topics['emergency']), args=())
+    emergency_process.start()
 
 
 if __name__ == '__main__':
