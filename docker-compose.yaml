@@ -1,0 +1,16 @@
+version: '3.5'
+networks:
+  default:
+    name: mqtt-simulator
+    driver: bridge
+services:
+  simulator:
+    image: simulator
+    ports:
+      - 5000:5000
+  mqtt:
+    image: mqtt
+    ports:
+      - 5001:5001
+    stdin_open: true # docker run -i
+    tty: true        # docker run -t

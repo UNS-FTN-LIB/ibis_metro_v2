@@ -132,7 +132,7 @@ class Simulator:
                         STOPED = True
                         STOPED_POSITION = time_interval - 1
                         POSITIONS_LEFT = 10 - STOPED_POSITION
-                        
+
                     time.sleep(self._train_position_change_time)
 
                     if STOPED == False:

@@ -4,7 +4,7 @@ import requests
 import mqtt_client.mqtt_config as config
 import mqtt_client.states as states
 
-endpoint = 'http://localhost:5000'
+endpoint = 'http://simulator:5000'
 pull_metro_data_url = endpoint + '/metro/'
 pull_trainA_data_url = endpoint + '/metro/train-a'
 pull_trainB_data_url = endpoint + '/metro/train-b'
