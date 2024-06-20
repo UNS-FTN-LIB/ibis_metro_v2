@@ -13,20 +13,7 @@ services:
       - ./ca/ca-root-cert.crt:/mosquitto/certs/ca-root-cert.crt
       - ./ca/server.key:/mosquitto/certs/server.key
       - ./ca/server.crt:/mosquitto/certs/server.crt
-      - ./mosquitto.conf:/mosquitto/config/mosquitto.conf
-
-  python-server:
-    image: auth_server:latest
-    container_name: auth-python-server
-    ports:
-      - "5000:5000"
-    networks:
-      - my_network
-    environment:
-      PYTHONUNBUFFERED: 1
-      KEYCLOAK_CLIENT_ID: "mqtt_broker"
-      KEYCLOAK_CLIENT_SECRET_KEY: "mCadD9tGhSMk2Hfu4n0SnpourFrsydMV"
-      SERVER_URL: "http://host.docker.internal:8080/"
+      - ./mosquitto-config/go-auth.conf:/mosquitto/config/mosquitto.conf
 
 networks:
   my_network:

@@ -1,6 +1,6 @@
 #Set mosquitto and plugin versions.
 #Change them as per your needs.
-ARG MOSQUITTO_VERSION=2.0.12
+ARG MOSQUITTO_VERSION=2.0.18
 ARG PLUGIN_VERSION=1.8.2
 ARG GOLANG_VERSION=1.17.5
 

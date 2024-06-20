@@ -1,3 +1,5 @@
+import os
+
 # TODO add fill list with updated topics for INview
 topics = {
     "train_aa": "TrainAA",
@@ -21,6 +23,8 @@ topics = {
     "start": "MetroStartButton"
 }
 
-broker = 'broker.hivemq.com'
-port = 1883
-client_id = "clientId-a8cc72zOh6"
+broker = os.getenv('BROKER')
+port = int(os.getenv('PORT'))
+client_id = os.getenv('CLIENT_ID')
+username = os.getenv('USERNAME')
+password = os.getenv('PASSWORD')

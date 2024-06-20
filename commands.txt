@@ -2,3 +2,9 @@ docker run -it --rm \
   -v /Users/digitalatrium/Documents/IBIS_Project/ca:/etc/letsencrypt \
   certbot/certbot certonly \
   -d cybergym.space
+
+
+docker build -t mqtt_broker .
+docker build -t auth_server .
+
+docker run -p 8080:8080 -e KEYCLOAK_ADMIN=admin -e KEYCLOAK_ADMIN_PASSWORD=admin quay.io/keycloak/keycloak:25.0.0 start-dev

@@ -3,6 +3,8 @@ from paho.mqtt import client as mqtt_client
 import requests
 import mqtt_client.mqtt_config as config
 import mqtt_client.states as states
+import ssl
+
 
 endpoint = 'http://simulator:5000'
 pull_metro_data_url = endpoint + '/metro/'
@@ -21,7 +23,13 @@ def connect_mqtt(client_id):
             print("Failed to connect, return code %d\n", rc)
 
     client = mqtt_client.Client(client_id)
+    # Set the username to "oauth2" and password to the access token
+    client.username_pw_set(config.username, config.password)
     client.on_connect = on_connect
+    # Configure TLS settings without verifying the server's certificate
+    client.tls_set(cert_reqs=ssl.CERT_NONE)
+    # Ensure that is working with self-signed cert
+    client.tls_insecure_set(True)
     client.connect(config.broker, config.port)
     return client
 
