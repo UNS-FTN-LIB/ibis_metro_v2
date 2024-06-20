@@ -2,27 +2,31 @@ from flask import Flask, request, jsonify
 from keycloak.keycloak_openid import KeycloakOpenID
 import jwt
 import requests
+import os
 
+client_id = os.environ['KEYCLOAK_CLIENT_ID']
+client_secret_key = os.environ['KEYCLOAK_CLIENT_SECRET_KEY']
+server_url = os.environ['SERVER_URL']
 
-KEYCLOAK_OPENID_CLIENT = KeycloakOpenID(server_url='http://keycloak:8080/',
-                                                client_id='mqtt_broker',
-                                                client_secret_key='R1TppwB4HbAvdpYYDScNPQ1fbXzTyHk1',
+KEYCLOAK_OPENID_CLIENT = KeycloakOpenID(server_url=server_url,
+                                                client_id=client_id,
+                                                client_secret_key=client_secret_key,
                                                 realm_name='master'
                                                 )
 app = Flask(__name__)
 
 def verify_jwt(token):
     try:
-        KEYCLOAK_PUBLIC_KEY = "-----BEGIN PUBLIC KEY-----\n" + KEYCLOAK_OPENID_CLIENT.public_key() + "\n-----END PUBLIC KEY-----"
-        options = {"verify_signature": True,"verify_aud": True, "verify_exp": True}
         # Decode and verify the JWT
         decoded = KEYCLOAK_OPENID_CLIENT.decode_token(token)
         return True, decoded
     except jwt.ExpiredSignatureError:
         return False, "Token expired"
     except jwt.InvalidTokenError as e:
+        print("Invalid token")
         return False, str(e)
-    except:
+    except Exception as e:
+        print("Nesto je otislo do kurca", e)
         return False, "Unknown error"
 
 @app.route('/auth', methods=['POST'])

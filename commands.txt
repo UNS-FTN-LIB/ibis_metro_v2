@@ -1,0 +1,4 @@
+docker run -it --rm \
+  -v /Users/digitalatrium/Documents/IBIS_Project/ca:/etc/letsencrypt \
+  certbot/certbot certonly \
+  -d cybergym.space

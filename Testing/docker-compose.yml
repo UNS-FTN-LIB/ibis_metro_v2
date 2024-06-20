@@ -1,26 +1,19 @@
 version: '3'
 
 services:
-  keycloak:
-    image: quay.io/keycloak/keycloak:24.0.4
-    container_name: keycloak
-    ports:
-      - "8080:8080"
-    environment:
-      KEYCLOAK_ADMIN: "admin"
-      KEYCLOAK_ADMIN_PASSWORD: "admin"
-    command: "start-dev"
-    networks:
-      - my_network
-
   mqtt-broker:
     image: mqtt_broker:latest
     container_name: mqtt-broker
     ports:
       - "1883:1883"
+      - "8883:8883" # Secure MQTT port
     networks:
       - my_network
-      
+    volumes:
+      - ./ca/ca-root-cert.crt:/mosquitto/certs/ca-root-cert.crt
+      - ./ca/server.key:/mosquitto/certs/server.key
+      - ./ca/server.crt:/mosquitto/certs/server.crt
+      - ./mosquitto.conf:/mosquitto/config/mosquitto.conf
 
   python-server:
     image: auth_server:latest
@@ -30,7 +23,10 @@ services:
     networks:
       - my_network
     environment:
-      - PYTHONUNBUFFERED=1
+      PYTHONUNBUFFERED: 1
+      KEYCLOAK_CLIENT_ID: "mqtt_broker"
+      KEYCLOAK_CLIENT_SECRET_KEY: "mCadD9tGhSMk2Hfu4n0SnpourFrsydMV"
+      SERVER_URL: "http://host.docker.internal:8080/"
 
 networks:
   my_network:
