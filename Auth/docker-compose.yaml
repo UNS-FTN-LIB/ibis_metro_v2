@@ -16,8 +16,8 @@ services:
       - --db-url=jdbc:postgresql://postgres:5432/database
       - --db-username=sputnik
       - --db-password=oPwiHXDrcRFGnX7
-      - --https-key-store-file=/certs/fullchain.pem
-      - --https-key-store-password=ibis2024
+      - --https-certificate-file=/etc/mosquitto/cert.pem
+      - --https-certificate-key-file=/etc/mosquitto/privkey.pem
 
   postgres:
     image: postgres
