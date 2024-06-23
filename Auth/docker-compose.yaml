@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+  keycloak:
+    image: quay.io/keycloak/keycloak:latest
+    container_name: ibiskeycloak
+    ports:
+      - "11000:8080"
+    environment:
+      - KEYCLOAK_ADMIN=ibis
+      - KEYCLOAK_ADMIN_PASSWORD=ibistest
+    command:
+      - start
+      - --db=postgres
+      - --features=token-exchange
+      - --db-url=jdbc:postgresql://postgres:5432/database
+      - --db-username=sputnik
+      - --db-password=oPwiHXDrcRFGnX7
+      - --https-key-store-file=/certs/fullchain.pem
+      - --https-key-store-password=ibis2024
+
+  postgres:
+    image: postgres
+    container_name: postgres
+    environment:
+      - POSTGRES_USER=sputnik
+      - POSTGRES_PASSWORD=oPwiHXDrcRFGnX7
+      - POSTGRES_DB=database
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+
+volumes:
+  postgres-data:

@@ -1,0 +1,18 @@
+
+sudo nano /etc/nginx/sites-available/cybergym.space
+
+sudo mkdir -p /var/www/cybergym.space
+sudo chown -R $USER:$USER /var/www/cybergym.space
+
+echo "Hello, world!" | sudo tee /var/www/cybergym.space/index.html
+
+sudo ln -s /etc/nginx/sites-available/cybergym.space /etc/nginx/sites-enabled/
+
+sudo certbot certonly --webroot -w /var/www/cybergym.space -d cybergym.space -d www.cybergym.space
+
+sudo certbot certonly --standalone -d cybergym.space -d www.cybergym.space
+sudo certbot certonly --nginx --dry-run -d cybergym.space -d www.cybergym.space
+
+sifre:
+    ibis   
+    ibis2024
