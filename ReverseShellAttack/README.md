@@ -84,4 +84,4 @@ Server koji osluškuje konekcije od žrtve biće kreiran na operativnog sistemu 
 
 Ako je sve podešeno kako je potrebno, uspešan napad bi trebao da izgleda:
 
-![Primer screenshot-a](Screenshots\attack_example.png)
+![Primer screenshot-a](Screenshots/attack_example.png)
