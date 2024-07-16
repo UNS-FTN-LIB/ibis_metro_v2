@@ -5,7 +5,7 @@ services:
     image: quay.io/keycloak/keycloak:latest
     container_name: ibiskeycloak
     ports:
-      - "11000:8080"
+      - "11000:8443"
     environment:
       - KEYCLOAK_ADMIN=ibis
       - KEYCLOAK_ADMIN_PASSWORD=ibistest
@@ -14,8 +14,8 @@ services:
       - --db=postgres
       - --features=token-exchange
       - --db-url=jdbc:postgresql://postgres:5432/database
-      - --db-username=sputnik
-      - --db-password=oPwiHXDrcRFGnX7
+      - --db-username=admin
+      - --db-password=admin
       - --https-certificate-file=/etc/mosquitto/cert.pem
       - --https-certificate-key-file=/etc/mosquitto/privkey.pem
 
@@ -23,8 +23,8 @@ services:
     image: postgres
     container_name: postgres
     environment:
-      - POSTGRES_USER=sputnik
-      - POSTGRES_PASSWORD=oPwiHXDrcRFGnX7
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=admin
       - POSTGRES_DB=database
     volumes:
       - postgres-data:/var/lib/postgresql/data

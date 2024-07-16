@@ -16,3 +16,7 @@ sudo certbot certonly --nginx --dry-run -d cybergym.space -d www.cybergym.space
 sifre:
     ibis   
     ibis2024
+
+/etc/mosquitto/chain.pem:/mosquitto/certs/chain.pem
+
+// mqtt_broker sifra 8h472GsRb4NgiQA

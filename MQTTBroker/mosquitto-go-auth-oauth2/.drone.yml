@@ -1,0 +1,29 @@
+kind: pipeline
+type: docker
+name: default
+
+steps:
+  - name: Test
+    image: golang:1.17
+    commands:
+      - cd src
+      - go test ./...
+
+  - name: Build Container
+    image: plugins/docker
+    when:
+      branch:
+        - master
+      event:
+        - push
+    settings:
+      repo: gewvtudresden/mosquitto-go-auth-oauth2
+      username:
+        from_secret: docker_username
+      password:
+        from_secret: docker_password
+      tags:
+        - latest
+        - 'v1.8.0'
+        - 'v1.8'
+        - 'v1'
