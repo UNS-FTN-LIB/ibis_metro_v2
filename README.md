@@ -1,5 +1,36 @@
 # IBIS Projekat
 
+Ovaj repozitorijum sadrži projekat iz predmeta IBIS koji su izradili Marko Đorđić i Marko Đurđević.
+
+## Opis Projekta
+
+U okviru ovog projekta implementiran je sistem za nadgledanje i upravljanje metroom u Beogradu. Projekat predstavlja unapređenje postojećeg projekta [Metro](https://github.com/Djordje99/IBIS_Project) rađenog 2023. godine na predmetu Informaciona bezbednost u infrastrukturnim sistemima. Za implementaciju projekta korišćen je programski jezik Python, Flask framework za API i komunikaciju, Mosquitto MQTT broker, Keycloak Identity servis, InView Cloud SCADA kao i Docker za kontejnerizaciju. Arhitektura postojećeg sistema unapređena je u pravcu povećanja bezbednosti sistema. To je postignuto dodavanjem servisa za autentifikaciju i autorizaciju korisnika kao i obezbeđivanjem komunikacionih kanala.
+
+![image](architecture.png)
+
+Aplikacija se sastoji od pet komponenti: Keycloak Identity servisa, MQTT Brokera, Simulatora, Klijenta i InView SCADA sistema.
+
+1. Keycloak Identity Service
+Keycloak se koristi kao centralni servis za autentifikaciju i autorizaciju korisnika, podržavajući RBAC (kontrola pristupa zasnovana na ulogama). Integrisan je s Mosquitto MQTT brokerom putem OAuth plugina, omogućavajući sigurnu autentifikaciju i autorizaciju korisnika koji pristupaju brokeru.
+
+2. Mosquitto MQTT Broker
+Mosquitto MQTT broker je unapređen dodavanjem OAuth plugina za integraciju s Keycloak-om, čime se omogućava kontrola pristupa i sigurnost komunikacije putem TLS enkripcije.
+
+3. Simulator
+Simulator je razvijen kao Flask REST API aplikacija i simulira vozove na metrou. Koristi više niti za simultano pokretanje različitih vozova, s mogućnošću zaustavljanja i nastavka rada.
+
+4. MQTT Client
+MQTT klijent prikuplja podatke iz simulatora i šalje ih na MQTT broker, uz osluškivanje promjena na SCADA sistemu. Klijent koristi TLS enkripciju za sigurnu komunikaciju.
+
+5. InView SCADA
+InView Cloud SCADA omogućava daljinsko nadgledanje i upravljanje putem pretraživača, s glavnim komponentama Editor i Client za konfiguraciju i prikaz podataka prikupljenih sa MQTT broker-a.
+
+## Scenario napada na sistem
+
+Kompletan scenario napada na sistem možete pronaći [ovde](ReverseShellAttack)
+
+## Uputstvo za Pokretanje Sistema
+
 Za lokalno pokretanje neophodno je generisati self-signed sertifikate.
 
 ### 1. Generisanje lokalnih SSL sertifikata pomoću OpenSSL-a
