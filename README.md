@@ -31,7 +31,7 @@ Kompletan scenario napada na sistem možete pronaći [ovde](ReverseShellAttack)
 
 ## Dokumentacija
 
-Dokumentaciju projekta sa detaljnim opisom komponenti možete pronaći [ovde](IBIS Documentation.pdf)
+Dokumentaciju projekta sa detaljnim opisom komponenti možete pronaći [ovde](IBISDocumentation.pdf)
 
 ## Uputstvo za Pokretanje Sistema
 
