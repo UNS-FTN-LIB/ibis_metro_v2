@@ -29,6 +29,10 @@ InView Cloud SCADA omogućava daljinsko nadgledanje i upravljanje putem pretraž
 
 Kompletan scenario napada na sistem možete pronaći [ovde](ReverseShellAttack)
 
+## Dokumentacija
+
+Dokumentaciju projekta sa detaljnim opisom komponenti možete pronaći [ovde](IBIS Documentation.pdf)
+
 ## Uputstvo za Pokretanje Sistema
 
 Za lokalno pokretanje neophodno je generisati self-signed sertifikate.
